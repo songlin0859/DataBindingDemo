@@ -112,7 +112,25 @@ class LoginBean : BaseObservable() {
 2. BindingAdapter 	
     BindingAdapter is applied to methods that are used to manipulate how values with expressions are set to views.
     BindingAdapter应用于用于维护如何将带有表达式的值设置为View的方法。 
-    其实就是将xml中的某个属性和xml对应View的方法对应起来
+    其实就是将xml中的某个属性和xml对应View要做些什么操作绑定
+    比如可以给TextView设置一个textAndColor(一个Android没有定义的属性)
+```xml
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        textAndColor = "@{textAndColor}"
+        />
+```
+再用BindingAdapter注解标记一个方法 表示用了这个属性 TextView要怎么做
+```kotlin
+@BindingAdapter("textAndColor", requireAll = true)
+fun setTextAndColor(view: TextView, textAndColor: String) {
+    val split = textAndColor.split("*")
+    view.text = split[0]
+    view.setTextColor(Color.parseColor(split[1]))
+}
+```
+最后通过设置`textAndColor`内容 比如 `"textAndColor*#FF0000"` 就会显示红色的textAndColor字符串
 3. BindingConversion 	
     Annotate methods that are used to automatically convert from the expression type to the value used in the setter. 
     注释方法，用于自动从表达式类型转换为设置器中使用的值。
@@ -134,8 +152,22 @@ class LoginBean : BaseObservable() {
 ```
 其实对付报错也可以使用String.valueOf(d)解决 但是使用这个注解的可以自动处理所有需要String类型但是传入的是Double的地方
 
-4. BindingMethod 	Used within an BindingMethods annotation to describe a renaming of an attribute to the setter used to set that attribute. 
+4. BindingMethod 	
+    Used within an annotation to describe a renaming of an attribute to the setter used to set that attribute. 
+    By default, an attribute attr will be associated with setter setAttr.
+    用这个标记其实就是指定attr属性对于的setter方法，默认情况下一个属性是会有对于的setter方法
 5. BindingMethods 	Used to enumerate attribute-to-setter renaming. 
+```java
+@BindingMethods({
+        @BindingMethod(type = android.widget.ImageView.class, attribute = "android:tint", method = "setImageTintList"),
+        @BindingMethod(type = android.widget.ImageView.class, attribute = "android:tintMode", method = "setImageTintMode"),
+})
+public class ImageViewBindingAdapter {
+    
+}
+```
+ImageView有android:tint属性 但是没有对于的setTint方法 对于的setter方法是setImageTintList
+
 6. InverseBindingAdapter 	InverseBindingAdapter is associated with a method used to retrieve the value for a View when setting values gathered from the View. 
 7. InverseBindingMethod 	InverseBindingMethod is used to identify how to listen for changes to a View property and which getter method to call. 
 8. InverseBindingMethods 	Used to enumerate attribute, getter, and event association. 
