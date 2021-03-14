@@ -69,3 +69,81 @@ android {
 ---
 
 ### 双向绑定
+
+`@={}` 表示法（其中重要的是包含“=”符号）可接收属性的数据更改并同时监听用户更新。
+
+
+### Fragment绑定
+
+### RecyclerView绑定
+
+### 注解
+[注解](https://developer.android.google.cn/reference/android/databinding/package-summary?hl=en&authuser=0#annotations)、
+1. Bindable 
+    The Bindable annotation should be applied to any getter accessor method of an Observable class. 
+    Bindable注解应应用于Observable类的任何getter方法。（直接用在字段上也可）
+    Bindable将在BR类中生成一个字段以标识已更改的字段。
+```kotlin
+class LoginBean : BaseObservable() {
+    @Bindable
+    var name: String? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.name)
+        }
+
+    var password: String? = null
+        @Bindable
+        get
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.password)
+        }
+
+    @Bindable(value = ["name","password"])
+    var desc:String? = null
+    get() {
+        return "${name ?: ""}:${password ?: ""}"
+    }
+    private set
+
+}
+``` 
+2. BindingAdapter 	BindingAdapter is applied to methods that are used to manipulate how values with expressions are set to views. 
+3. BindingConversion 	Annotate methods that are used to automatically convert from the expression type to the value used in the setter. 
+4. BindingMethod 	Used within an BindingMethods annotation to describe a renaming of an attribute to the setter used to set that attribute. 
+5. BindingMethods 	Used to enumerate attribute-to-setter renaming. 
+6. InverseBindingAdapter 	InverseBindingAdapter is associated with a method used to retrieve the value for a View when setting values gathered from the View. 
+7. InverseBindingMethod 	InverseBindingMethod is used to identify how to listen for changes to a View property and which getter method to call. 
+8. InverseBindingMethods 	Used to enumerate attribute, getter, and event association. 
+9. InverseMethod 	
+    The InverseMethod annotation may be applied to any method used in two-way data binding to declare the method used to invert the call when going from the View's attribute value to the bound data value.
+    InverseMethod注解可以应用于双向数据绑定中使用的任何方法，以声明从View的属性值转到绑定的数据值时用于反转调用的方法。
+    逆方法必须采用相同数量的参数并且只有最终参数类型可能有所不同。 此方法的最终参数必须匹配其反函数的返回值和此方法的返回值必须与最终值匹配其反参数。  
+ ```kotlin
+    @InverseMethod("stringToInt")
+    fun intToString(i: Int?): String? {
+        return i?.toString()
+    }
+    
+    fun stringToInt(str: String?): Int? {
+        if (str == null){
+            return null
+        }
+        try {
+            return str.toInt()
+        }catch (e : Exception){
+    
+        }
+        return null
+    
+    }
+```
+```xml
+    <EditText
+        android:id="@+id/age"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@={com.sl.databindingdemo.inversemethod.InverseMethodUtilKt.intToString(login.age)}"
+        android:ems="10" />
+```

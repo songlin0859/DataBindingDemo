@@ -20,11 +20,19 @@ class LoginBean : BaseObservable() {
             notifyPropertyChanged(BR.password)
         }
 
-    @Bindable(value = ["name","password"])
-    var desc:String? = null
-    get() {
-        return "${name ?: ""}:${password ?: ""}"
-    }
-    private set
+    @get:Bindable
+    var age: Int? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.age)
+        }
+
+    @Bindable(value = ["name", "password", "age"])
+    var desc: String? = null
+        get() {
+            return "${name ?: ""}:${password ?: ""}:age=${age ?: ""}"
+        }
+        private set
+
 
 }
