@@ -12,6 +12,7 @@ class UserActivity : AppCompatActivity() {
 
         val mBinding = DataBindingUtil.setContentView<ActivityUserBinding>(this, R.layout.activity_user)
 
-        mBinding.user = User("Songlin", 30)
+        //mBinding.user = User("Songlin", 30)
+        mBinding.setVariable(BR.user, User("LL", 26))
     }
 }
