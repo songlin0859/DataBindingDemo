@@ -14,4 +14,8 @@ class MainActivity : AppCompatActivity() {
     fun goToUser(view: View) {
         startActivity(Intent(this, UserActivity::class.java))
     }
+
+    fun login(view: View) {
+        startActivity(Intent(this, LoginActivity::class.java))
+    }
 }
