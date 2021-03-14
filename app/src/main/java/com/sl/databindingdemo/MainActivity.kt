@@ -18,4 +18,8 @@ class MainActivity : AppCompatActivity() {
     fun login(view: View) {
         startActivity(Intent(this, LoginActivity::class.java))
     }
+
+    fun binding(view: View) {
+        startActivity(Intent(this, BindingAdapterActivity::class.java))
+    }
 }

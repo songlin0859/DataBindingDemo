@@ -21,4 +21,11 @@
         android:onClick="login"
         />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="BindingAdapter"
+        android:onClick="binding"
+        />
+
 </LinearLayout>

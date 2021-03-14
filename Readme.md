@@ -109,7 +109,10 @@ class LoginBean : BaseObservable() {
 
 }
 ``` 
-2. BindingAdapter 	BindingAdapter is applied to methods that are used to manipulate how values with expressions are set to views. 
+2. BindingAdapter 	
+    BindingAdapter is applied to methods that are used to manipulate how values with expressions are set to views.
+    BindingAdapter应用于用于维护如何将带有表达式的值设置为View的方法。 
+    其实就是将xml中的某个属性和xml对应View的方法对应起来
 3. BindingConversion 	
     Annotate methods that are used to automatically convert from the expression type to the value used in the setter. 
     注释方法，用于自动从表达式类型转换为设置器中使用的值。
@@ -166,4 +169,35 @@ class LoginBean : BaseObservable() {
         android:layout_height="wrap_content"
         android:text="@={com.sl.databindingdemo.anno.InverseMethodUtilKt.intToString(login.age)}"
         android:ems="10" />
+```
+
+### 原理
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="1"
+    android:tag="layout/activity_user_0"
+    android:layout_width="-1"
+    android:layout_height="-1">
+
+    <TextView
+        android:textSize="dimension(4610)"
+        android:tag="binding_1"
+        android:padding="dimension(2561)"
+        android:layout_width="-1"
+        android:layout_height="-2" />
+
+    <TextView
+        android:textSize="dimension(4610)"
+        android:tag="binding_2"
+        android:padding="dimension(2561)"
+        android:layout_width="-1"
+        android:layout_height="-2" />
+
+    <TextView
+        android:tag="binding_3"
+        android:layout_width="-1"
+        android:layout_height="-2" />
+</LinearLayout>
 ```
