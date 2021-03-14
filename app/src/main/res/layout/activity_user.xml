@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.sl.databindingdemo.bean.User"/>
+        <!--
+        android studio 在升级3.5.0之后引起的关于databinding的错误
+        Missing import expression although it is registered
+        将项目编译出错的 xml中所有关于 java.lang包下的类删除，rebuild项目后即可。
+        -->
+        <!--<import type="java.lang.String"/>-->
+        <variable
+            name="user"
+            type="User" />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".UserActivity">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textSize="18sp"
+            android:text="@{user.name}"
+            tools:text="name"
+            />
+
+        <!--不能直接将一个int类型的值赋给text-->
+        <!--android.content.res.Resources$NotFoundException: String resource ID #0x1e-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textSize="18sp"
+            android:text="@{String.valueOf(user.age)}"
+            tools:text="age"
+            />
+    </LinearLayout>
+</layout>
