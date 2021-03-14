@@ -168,9 +168,13 @@ public class ImageViewBindingAdapter {
 ```
 ImageView有android:tint属性 但是没有对于的setTint方法 对于的setter方法是setImageTintList
 
-6. InverseBindingAdapter 	InverseBindingAdapter is associated with a method used to retrieve the value for a View when setting values gathered from the View. 
+6. InverseBindingAdapter 	
+InverseBindingAdapter is associated with a method used to retrieve the value for a View when setting values gathered from the View. 
+BindingAdapter用于绑定View的某个属性对应的set操作 InverseBindingAdapter用由于获取对应属性的值的操作
+
 7. InverseBindingMethod 	InverseBindingMethod is used to identify how to listen for changes to a View property and which getter method to call. 
 8. InverseBindingMethods 	Used to enumerate attribute, getter, and event association. 
+
 9. InverseMethod 	
     The InverseMethod annotation may be applied to any method used in two-way data binding to declare the method used to invert the call when going from the View's attribute value to the bound data value.
     InverseMethod注解可以应用于双向数据绑定中使用的任何方法，以声明从View的属性值转到绑定的数据值时用于反转调用的方法。

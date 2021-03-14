@@ -6,11 +6,34 @@
         <variable
             name="textAndColor"
             type="String" />
+
+        <variable
+            name="textAndSize"
+            type="com.sl.databindingdemo.bean.TextAndSizeBeam" />
     </data>
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        textAndColor = "@{textAndColor}"
-        />
+        android:orientation="vertical">
+
+        <TextView
+            textAndColor="@{textAndColor}"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            textAndSize="@={textAndSize.textAndSize}"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            textAndSize="@={textAndSize.textAndSize}"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
 </layout>
