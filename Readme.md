@@ -110,7 +110,27 @@ class LoginBean : BaseObservable() {
 }
 ``` 
 2. BindingAdapter 	BindingAdapter is applied to methods that are used to manipulate how values with expressions are set to views. 
-3. BindingConversion 	Annotate methods that are used to automatically convert from the expression type to the value used in the setter. 
+3. BindingConversion 	
+    Annotate methods that are used to automatically convert from the expression type to the value used in the setter. 
+    注释方法，用于自动从表达式类型转换为设置器中使用的值。
+报错：`Cannot find a setter for <TextView android:text> that accepts parameter type 'double'`
+```xml
+    <!--Cannot find a setter for <TextView android:text> that accepts parameter type 'double'-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@{user.wegiht}"
+        />
+```
+编写一个doubleToString的函数并且用BindingConversion注解 报错就没了
+```kotlin
+    @BindingConversion
+    fun doubleToString(d: Double?): String {
+        return d?.toString() ?: ""
+    }
+```
+其实对付报错也可以使用String.valueOf(d)解决 但是使用这个注解的可以自动处理所有需要String类型但是传入的是Double的地方
+
 4. BindingMethod 	Used within an BindingMethods annotation to describe a renaming of an attribute to the setter used to set that attribute. 
 5. BindingMethods 	Used to enumerate attribute-to-setter renaming. 
 6. InverseBindingAdapter 	InverseBindingAdapter is associated with a method used to retrieve the value for a View when setting values gathered from the View. 
@@ -144,6 +164,6 @@ class LoginBean : BaseObservable() {
         android:id="@+id/age"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@={com.sl.databindingdemo.inversemethod.InverseMethodUtilKt.intToString(login.age)}"
+        android:text="@={com.sl.databindingdemo.anno.InverseMethodUtilKt.intToString(login.age)}"
         android:ems="10" />
 ```

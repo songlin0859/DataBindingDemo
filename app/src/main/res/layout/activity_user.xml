@@ -38,5 +38,12 @@
             android:text="@{String.valueOf(user.age)}"
             tools:text="age"
             />
+
+        <!--Cannot find a setter for <TextView android:text> that accepts parameter type 'double'-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{user.wegiht}"
+            />
     </LinearLayout>
 </layout>

@@ -1,4 +1,4 @@
-package com.sl.databindingdemo.inversemethod
+package com.sl.databindingdemo.anno
 
 import androidx.databinding.InverseMethod
 import java.lang.Exception
