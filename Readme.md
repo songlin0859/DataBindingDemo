@@ -208,6 +208,59 @@ BindingAdapter用于绑定View的某个属性对应的set操作 InverseBindingAd
 ```
 
 ### 原理
+activity_user.xml
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.sl.databindingdemo.bean.User"/>
+        <!--
+        android studio 在升级3.5.0之后引起的关于databinding的错误
+        Missing import expression although it is registered
+        将项目编译出错的 xml中所有关于 java.lang包下的类删除，rebuild项目后即可。
+        -->
+        <!--<import type="java.lang.String"/>-->
+        <variable
+            name="user"
+            type="User" />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".UserActivity">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textSize="18sp"
+            android:text="@{user.name}"
+            tools:text="name"
+            />
+
+        <!--不能直接将一个int类型的值赋给text-->
+        <!--android.content.res.Resources$NotFoundException: String resource ID #0x1e-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textSize="18sp"
+            android:text="@{String.valueOf(user.age)}"
+            tools:text="age"
+            />
+
+        <!--Cannot find a setter for <TextView android:text> that accepts parameter type 'double'-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{user.wegiht}"
+            />
+    </LinearLayout>
+</layout>
+```
+布局文件本处理后的样子如下 多了一些`android:tag`
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
@@ -236,4 +289,58 @@ BindingAdapter用于绑定View的某个属性对应的set操作 InverseBindingAd
         android:layout_width="-1"
         android:layout_height="-2" />
 </LinearLayout>
+
 ```
+再看代码
+androidx.databinding.DataBindingUtil.setContentView(android.app.Activity, int)
+       //setContentView(activity, layoutId, sDefaultComponent)
+    -> androidx.databinding.DataBindingUtil.setContentView(android.app.Activity, int, androidx.databinding.DataBindingComponent){
+                activity.setContentView(layoutId);
+                View decorView = activity.getWindow().getDecorView();
+                ViewGroup contentView = (ViewGroup) decorView.findViewById(android.R.id.content);
+                return bindToAddedViews(bindingComponent, contentView, 0, layoutId);
+         }
+         ->androidx.databinding.DataBindingUtil.bindToAddedViews
+         private static <T extends ViewDataBinding> T bindToAddedViews(DataBindingComponent component,
+                     ViewGroup parent, int startChildren, int layoutId) {
+                 final int endChildren = parent.getChildCount();
+                 final int childrenAdded = endChildren - startChildren;
+                 if (childrenAdded == 1) {
+                     final View childView = parent.getChildAt(endChildren - 1);
+                     return bind(component, childView, layoutId);
+                 } else {
+                     final View[] children = new View[childrenAdded];
+                     for (int i = 0; i < childrenAdded; i++) {
+                         children[i] = parent.getChildAt(i + startChildren);
+                     }
+                     return bind(component, children, layoutId);
+                 }
+             }
+             
+                ->androidx.databinding.DataBindingUtil.bind(androidx.databinding.DataBindingComponent, android.view.View[], int)
+                static <T extends ViewDataBinding> T bind(DataBindingComponent bindingComponent, View[] roots,
+                            int layoutId) {
+                            //private static DataBinderMapper sMapper = new DataBinderMapperImpl();
+                        return (T) sMapper.getDataBinder(bindingComponent, roots, layoutId);
+                    }
+                    
+                   
+                   sKeys.put("layout/activity_user_0", com.sl.databindingdemo.R.layout.activity_user);
+                   ........
+                   
+                   
+    Bindable 綁定getter方法 用于生产BR中的id 	
+    BindingConversion 类型转换 比如background需要的是drawable但是给的是color需要将color转一下
+    InverseMethod 类型转换的逆方法
+    
+    BindingMethod 	
+    BindingMethods 和上面的一起使用 用来绑定attr和对应的set方法（不是对应的setAttr）
+    
+    BindingAdapter 	用于绑定属性（可能原本不存在的 比如 happy） 和对应的操作/双向绑定避免死循环
+    
+    	
+    InverseBindingMethod 	
+    InverseBindingMethods 和上面一起使用 用来属性改变后获取属性的方法
+    
+    InverseBindingAdapter 用来属性改变后获取属性的方法，View中不存在直接可以使用的getter
+    
